@@ -7,7 +7,7 @@ except ImportError:
 
 rumps.debug_mode(True)
 
-TIME_INTERVAL = 5#25*60
+TIME_INTERVAL = 25*60
 
 def timez():
     return time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime())
@@ -31,8 +31,6 @@ class TimerApp(object):
         self.app.run()
 
     def start_timer(self, sender):
-        # print(sender.title)
-
         if sender.title in ['Start timer', 'Continue timer']:
 
             if sender.title == 'Start timer':
@@ -47,35 +45,30 @@ class TimerApp(object):
             # lift off! start the timer
             self.timer.start()
         else:  # 'Pause Timer'
-            # print('test')
             sender.title = 'Continue timer'
             self.app.icon = 'icons/hour_glass_idle.png'
             self.timer.stop()
 
     def on_tick(self, sender):
-        #print('%r %r' % (sender, timez()))
-        try:
-            # print(sender.count)
-            time_left = sender.end - sender.count
-            # handle minute and second counter if positive/negative time left
-            mins = time_left // 60 if time_left >= 0 else time_left // 60 + 1
-            secs = time_left % 60 if time_left >= 0 else (-1 * time_left) % 60
-            print(mins, secs)
-            if mins == 0 and time_left < 0:
-                # add minus sign if between -1 and -59 seconds
-                self.app.title = '-{:2d}:{:02d}'.format(mins, secs)
-            else:
-                self.app.title = '{:2d}:{:02d}'.format(mins, secs)
+        time_left = sender.end - sender.count
+        # handle minute and second counter if positive/negative time left
+        mins = time_left // 60 if time_left >= 0 else time_left // 60 + 1
+        secs = time_left % 60 if time_left >= 0 else (-1 * time_left) % 60
+        print(mins, secs)
+        if mins == 0 and time_left < 0:
+            # add minus sign if between -1 and -59 seconds
+            self.app.title = '-{:2d}:{:02d}'.format(mins, secs)
+        else:
+            self.app.title = '{:2d}:{:02d}'.format(mins, secs)
 
-            sender.count += 1
-            if sender.count == sender.end:
-                rumps.notification(title='Time is up! Take a break :)',
-                                   subtitle='PyModoro',
-                                   message='')
-                print('stopping timer')
-                # stop_timer()
-        except Exception as ex:
-            print('Did not work', ex)
+        sender.count += 1
+        if sender.count == sender.end:
+            rumps.notification(title='Time is up! Take a break :)',
+                               subtitle='PyModoro',
+                               message='')
+            ## Uncomment if hard stop of timer wanted
+            # print('stopping timer')
+            # stop_timer()
 
     def stop_timer(self, sender=None):
         print('Called right fct')
@@ -84,7 +77,7 @@ class TimerApp(object):
         self.app.title = None
         self.app.icon = 'icons/tomato.png'
         self.start_pause_button.title = 'Start timer'
-        #app.menu._menu[0].title = 'Start timer'
+        app.menu._menu[0].title = 'Start timer'
 
 
 if __name__ == '__main__':
