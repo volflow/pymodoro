@@ -7,7 +7,7 @@ except ImportError:
 
 rumps.debug_mode(True)
 
-TIME_INTERVAL = 25*60
+TIME_INTERVAL = 5#25*60
 
 def timez():
     return time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime())
